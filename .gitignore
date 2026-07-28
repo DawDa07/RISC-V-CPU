@@ -1,0 +1,15 @@
+# Build artifacts
+build/
+wave.vcd
+*.vcd
+*.fst
+
+# Editor / OS
+.DS_Store
+*.swp
+*~
+
+# Object dumps left outside build/
+*.o
+*.elf
+*.dis
