@@ -12,7 +12,9 @@ results.xml
 *.vcd
 *.fst
 
-# OS / editor
+# OS / editor (local Python paths)
+.vscode/
+pyrightconfig.json
 .DS_Store
 *.swp
 *~
