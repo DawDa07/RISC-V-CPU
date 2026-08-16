@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Cocotb / Icarus
+sim_build/
+results.xml
+*.vvp
+*.vcd
+*.fst
+
+# OS / editor
+.DS_Store
+*.swp
+*~
