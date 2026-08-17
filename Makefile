@@ -1,14 +1,12 @@
-# Simulator settings
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 
-# Paths to your files
-VERILOG_SOURCES += $(PWD)/nand_gate.sv
-TOPLEVEL = nand_gate        # The name of the module in SV
-COCOTB_TEST_MODULES = test_nand     # The name of the Python file
+VERILOG_SOURCES += $(PWD)/rf_wb_mux.sv
+TOPLEVEL = rf_wb_mux
+MODULE = python_stimulus_rf_wb_mux
 
-# Enable Waveform Dumping (for GTKWave)
 COMPILE_ARGS += -g2012
+#export COCOTB_LOG_LEVEL = WARNING
 export COCOTB_HDL_TIMEUNIT = 1ns
 export COCOTB_HDL_TIMEPRECISION = 1ps
 
