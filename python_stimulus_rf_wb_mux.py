@@ -2,69 +2,65 @@ import cocotb
 from cocotb.triggers import Timer
 from cocotb.types import LogicArray
 
+# Mirror osoc_pkg::wb_sel_e in Python
+SEL_ALU = 0b00
+SEL_LAU = 0b01
+SEL_PC4 = 0b10
+
 
 def python_rf_wb_mux(alu_res_i, lau_res_i, pc_plus_4_i, d2r_sel_i):
-    if d2r_sel_i == 0:
+    """Golden model matching osoc_pkg + rf_wb_mux.sv."""
+    if d2r_sel_i == SEL_ALU:
         return alu_res_i
-    elif d2r_sel_i == 1:
+    if d2r_sel_i == SEL_LAU:
         return lau_res_i
-    elif d2r_sel_i == 2:
+    if d2r_sel_i == SEL_PC4:
         return pc_plus_4_i
-    else:
-        return 0
+    return 0
+
+
+async def drive_mux(dut, alu, lau, pc4, sel):
+    dut.alu_res_i.value = alu
+    dut.lau_res_i.value = lau
+    dut.pc_plus_4_i.value = pc4
+    dut.d2r_sel_i.value = sel
+    await Timer(1, unit="ns")
 
 
 @cocotb.test()
 async def test_mux_x_state(dut):
-    """Test how the hardware handles unknown X states on the select line."""
-    
-    # 1. Set standard data
-    dut.alu_res_i.value = 0xFFFFFFFF
-    dut.lau_res_i.value = 0x00000000
-    dut.pc_plus_4_i.value = 0x0000000F
-    
-    # 2. Drive a VALID select first
-    dut.d2r_sel_i.value = 0
-    await Timer(1, unit="ns")
-    
-    # 3. Inject the 'X' state
-    dut.d2r_sel_i.value = LogicArray("XX") # Inject X state
+    """Observe hardware behavior when the select line goes to X."""
+    await drive_mux(dut, 0xFFFFFFFF, 0x00000000, 0x0000000F, SEL_ALU)
+
+    assert int(dut.rf_wd_o.value) == 0xFFFFFFFF, \
+        "Expected ALU path before injecting X on select"
+
+    dut.d2r_sel_i.value = LogicArray("XX")
     await Timer(1, unit="ns")
 
+    dut._log.info(f"Output with X select: {dut.rf_wd_o.value}")
 
 
 @cocotb.test()
 async def golden_model_mux_test(dut):
-    """Verify all valid select lines against the Python Golden Model using Max/Min boundaries."""
-
-    # Define our strict maximum and minimum boundaries for 32-bit architecture
+    """Verify all enum selects and the default case against the golden model."""
     MAX_VAL = 0xFFFFFFFF
     MIN_VAL = 0x00000000
 
-    # Test Vectors: (alu_res, lau_res, pc_plus_4, select_line)
     test_cases = [
-        (MAX_VAL, MIN_VAL, MIN_VAL, 0), # Max boundary on ALU
-        (MIN_VAL, MAX_VAL, MIN_VAL, 1), # Max boundary on LAU
-        (MIN_VAL, MIN_VAL, MAX_VAL, 2), # Max boundary on PC+4
-        (0xAAAAAAAA, 0x55555555, 0x12345678, 3) # Invalid select line (should hit default)
+        (MAX_VAL, MIN_VAL, MIN_VAL, SEL_ALU, "SEL_ALU"),
+        (MIN_VAL, MAX_VAL, MIN_VAL, SEL_LAU, "SEL_LAU"),
+        (MIN_VAL, MIN_VAL, MAX_VAL, SEL_PC4, "SEL_PC4"),
+        (0xAAAAAAAA, 0x55555555, 0x12345678, 0b11, "invalid select"),
     ]
 
-    for alu, lau, pc4, sel in test_cases:
-        # 1. Drive the physical SystemVerilog pins
-        dut.alu_res_i.value  = alu
-        dut.lau_res_i.value  = lau
-        dut.pc_plus_4_i.value = pc4
-        dut.d2r_sel_i.value  = sel
+    for alu, lau, pc4, sel, label in test_cases:
+        await drive_mux(dut, alu, lau, pc4, sel)
 
-        # 2. Wait for combinational logic to propagate
-        await Timer(1, unit="ns")
+        expected = python_rf_wb_mux(alu, lau, pc4, sel)
+        actual = int(dut.rf_wd_o.value)
 
-        # 3. Ask the Python Oracle what the answer should be
-        expected_output = python_rf_wb_mux(alu, lau, pc4, sel)
+        assert actual == expected, \
+            f"{label}: got {hex(actual)}, expected {hex(expected)}"
 
-        # 4. Read the physical hardware pin
-        actual_output = int(dut.rf_wd_o.value)
-
-        # 5. Automatically compare
-        assert actual_output == expected_output, \
-            f"FAIL! Hardware produced {hex(actual_output)}, but Oracle expected {hex(expected_output)}"
+        dut._log.info(f"PASSED {label}: rf_wd_o = {hex(actual)}")
