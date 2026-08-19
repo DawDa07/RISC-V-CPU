@@ -1,7 +1,7 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 
-VERILOG_SOURCES += $(PWD)/../osoc_pkg.sv
+VERILOG_SOURCES += $(PWD)/../cpu_sv_package.sv
 VERILOG_SOURCES += $(PWD)/rf_wb_mux.sv
 TOPLEVEL = rf_wb_mux
 MODULE = python_stimulus_rf_wb_mux

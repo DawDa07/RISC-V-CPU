@@ -2,14 +2,14 @@ import cocotb
 from cocotb.triggers import Timer
 from cocotb.types import LogicArray
 
-# Mirror osoc_pkg::wb_sel_e in Python
+# Mirror cpu_sv_package::wb_sel_e in Python
 SEL_ALU = 0b00
 SEL_LAU = 0b01
 SEL_PC4 = 0b10
 
 
 def python_rf_wb_mux(alu_res_i, lau_res_i, pc_plus_4_i, d2r_sel_i):
-    """Golden model matching osoc_pkg + rf_wb_mux.sv."""
+    """Golden model matching cpu_sv_package + rf_wb_mux.sv."""
     if d2r_sel_i == SEL_ALU:
         return alu_res_i
     if d2r_sel_i == SEL_LAU:

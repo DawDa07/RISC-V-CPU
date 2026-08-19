@@ -1,4 +1,4 @@
-import osoc_pkg::*; // Import our CPU vocabulary
+import cpu_sv_package::*; // Import our CPU vocabulary
 
 module rf_wb_mux #(
   parameter WIDTH = 32
