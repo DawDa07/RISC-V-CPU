@@ -9,7 +9,7 @@ SEL_PC4 = 0b10
 
 
 def python_rf_wb_mux(alu_res_i, lau_res_i, pc_plus_4_i, d2r_sel_i):
-    """Golden model matching cpu_sv_package + rf_wb_mux.sv."""
+    """python model for rf_wb_mux"""
     if d2r_sel_i == SEL_ALU:
         return alu_res_i
     if d2r_sel_i == SEL_LAU:
