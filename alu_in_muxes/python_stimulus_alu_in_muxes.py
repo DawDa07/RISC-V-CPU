@@ -1,9 +1,7 @@
 import random
 import cocotb
 from cocotb.triggers import Timer
-from osoc1_core_uarch import module_alu_in_muxes
-# Import both the module and the global utility!
-from osoc1_core_uarch import module_alu_in_muxes, get_max
+from alu_in_muxes_uarch import get_max, module_alu_in_muxes
 
 # ==============================================================================
 # AUTOMATED RANDOM VERIFICATION
