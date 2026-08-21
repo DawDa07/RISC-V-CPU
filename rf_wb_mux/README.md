@@ -6,28 +6,6 @@
 
 ![rf_wb_mux RTL block diagram](rf_wb_mux_rtl.png)
 
-## Flowchart
-
-```mermaid
-flowchart TB
-  alu["alu_res_i<br/>ALU result"]
-  lau["lau_res_i<br/>load / memory data"]
-  pc4["pc_plus_4_i<br/>PC + 4"]
-  sel["d2r_sel_i<br/>wb_sel_e"]
-
-  mux{"rf_wb_mux"}
-
-  alu --> mux
-  lau --> mux
-  pc4 --> mux
-  sel --> mux
-
-  mux -->|SEL_ALU| out_alu["rf_wd_o = alu_res_i"]
-  mux -->|SEL_LAU| out_lau["rf_wd_o = lau_res_i"]
-  mux -->|SEL_PC4| out_pc4["rf_wd_o = pc_plus_4_i"]
-  mux -->|default| out_z["rf_wd_o = 0"]
-```
-
 ## Select table
 
 | `d2r_sel_i` | Value   | Output `rf_wd_o` | Typical use        |
