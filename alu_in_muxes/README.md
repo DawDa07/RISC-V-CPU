@@ -23,14 +23,3 @@ Two combinational muxes that choose the **A** and **B** operands fed into the AL
 |------------|--------|------------------|--------------------|
 | `OP_B_RS2` | `1'b0` | `rs2_val_i`      | `add`, `sub`, …    |
 | `OP_B_IMM` | `1'b1` | `imm_i`          | `addi`, `lw`, …    |
-
-## Files
-
-| File | Role |
-|------|------|
-| `alu_in_muxes.sv` | SystemVerilog hardware |
-| `alu_in_muxes_uarch.py` | Python golden model |
-| `python_stimulus_alu_in_muxes.py` | cocotb tests |
-| `Makefile` | compile + simulate with Icarus |
-| `../cpu_sv_package.sv` | shared enums (`sel_alu_a_e`, `sel_alu_b_e`) |
-
