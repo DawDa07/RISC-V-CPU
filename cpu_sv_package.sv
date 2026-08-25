@@ -36,4 +36,17 @@ package cpu_sv_package;
     ALU_AND  = 4'd9
   } alu_op_e;
 
+  // RISC-V major opcodes (instr[6:0])
+  typedef enum logic [6:0] {
+    OPCODE_I_TYPE_LOAD = 7'b0000011,
+    OPCODE_I_TYPE_ALU  = 7'b0010011,
+    OPCODE_U_TYPE_AUIPC = 7'b0010111,
+    OPCODE_S_TYPE      = 7'b0100011,
+    OPCODE_R_TYPE      = 7'b0110011,
+    OPCODE_U_TYPE_LUI  = 7'b0110111,
+    OPCODE_B_TYPE      = 7'b1100011,
+    OPCODE_I_TYPE_JALR = 7'b1100111,
+    OPCODE_J_TYPE      = 7'b1101111
+  } opcode_e;
+
 endpackage
