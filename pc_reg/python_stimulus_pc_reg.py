@@ -10,7 +10,7 @@ from pc_reg_uarch import module_pc_reg_capture, module_pc_reg_reset
 async def automated_pc_reg_test(dut):
     """Verify the PC Register with strict max/min boundaries and reset behavior."""
 
-    cocotb.start_soon(Clock(dut.clk_i, 10, units="ns").start())
+    cocotb.start_soon(Clock(dut.clk_i, 10, unit="ns").start())
 
     MAX_VAL = 0xFFFFFFFF
     MIN_VAL = 0x00000000
@@ -19,7 +19,7 @@ async def automated_pc_reg_test(dut):
     dut.rst_ni.value = 0
     dut.pc_d_i.value = MAX_VAL
 
-    await Timer(15, units="ns")
+    await Timer(15, unit="ns")
 
     hw_reset_val = int(dut.pc_q_o.value) & MAX_VAL
     exp_reset = module_pc_reg_reset()
@@ -48,7 +48,7 @@ async def automated_pc_reg_test(dut):
     for desc, d_val in test_cases:
         dut.pc_d_i.value = d_val
         await RisingEdge(dut.clk_i)
-        await Timer(1, units="ns")
+        await Timer(1, unit="ns")
 
         hw_q = int(dut.pc_q_o.value) & MAX_VAL
         exp_q = module_pc_reg_capture(d_val)
