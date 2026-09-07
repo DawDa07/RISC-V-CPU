@@ -1,25 +1,45 @@
-module instr_mem_behavioral #(
-    parameter int DEPTH = 1024 
+module instr_mem_wrapper #(
+    parameter int DEPTH = 1024
 )(
+    // =========================================================================
+    // CPU-Facing Interface
+    // =========================================================================
+`ifdef USE_OPENRAM
+    input  logic        clk_i,
+`endif
     input  logic [31:0] pc_i,
     output logic [31:0] instr_o
 );
 
-    // The physical memory array (Word addressed)
-    logic [31:0] memory_array [0:DEPTH-1];
+`ifdef USE_OPENRAM
 
-    // Initialize memory with hex firmware at time zero
-    initial begin
-        $readmemh("firmware.hex", memory_array);
-    end
+    // Physical Design: OpenRAM Instantiation (read-only instruction fetch)
+    logic csb0;
+    logic web0;
 
-    // =========================================================================
-    // Asynchronous Combinational Fetch
-    // =========================================================================
-    // Shift PC right by 2 to convert Byte-Address to Word-Address
-    wire [29:0] word_addr = pc_i[31:2];
+    assign csb0 = 1'b0;
+    assign web0 = 1'b1;  // Always read
 
-    // Fetch instruction. If PC is out of bounds, return 0 (safe fallback)
-    assign instr_o = (word_addr < DEPTH) ? memory_array[word_addr] : 32'h00000000;
+    sram_4kb_32b_openram u_physical_macro (
+        .clk0   (clk_i),
+        .csb0   (csb0),
+        .web0   (web0),
+        .wmask0 (4'b0000),
+        .addr0  (pc_i[11:2]),
+        .din0   (32'h00000000),
+        .dout0  (instr_o)
+    );
+
+`else
+
+    // Simulation: Behavioral Model Instantiation
+    instr_mem_behavioral #(
+        .DEPTH(DEPTH)
+    ) u_behav_macro (
+        .pc_i    (pc_i),
+        .instr_o (instr_o)
+    );
+
+`endif
 
 endmodule

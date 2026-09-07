@@ -42,9 +42,9 @@ module ctrl (
                 regfile_we_o = 1'b1;
                 case (funct3_i)
                     3'd0: alu_ctrl_o = (funct7_i == 7'd32) ? 4'd1 : 4'd0; // SUB : ADD
-                    3'd1: alu_ctrl_o = 4'd2; // SLL
-                    3'd2: alu_ctrl_o = 4'd3; // SLT
-                    3'd3: alu_ctrl_o = 4'd4; // SLTU
+                    3'd1: alu_ctrl_o = 4'd4; // SLL  (alu_op_e)
+                    3'd2: alu_ctrl_o = 4'd2; // SLT
+                    3'd3: alu_ctrl_o = 4'd3; // SLTU
                     3'd4: alu_ctrl_o = 4'd5; // XOR
                     3'd5: alu_ctrl_o = (funct7_i == 7'd32) ? 4'd7 : 4'd6; // SRA : SRL
                     3'd6: alu_ctrl_o = 4'd8; // OR
@@ -58,9 +58,9 @@ module ctrl (
                 alu_src2_ctrl_o = 1'b1;
                 case (funct3_i)
                     3'd0: alu_ctrl_o = 4'd0; // ADDI
-                    3'd1: alu_ctrl_o = 4'd2; // SLLI
-                    3'd2: alu_ctrl_o = 4'd3; // SLTI
-                    3'd3: alu_ctrl_o = 4'd4; // SLTIU
+                    3'd1: alu_ctrl_o = 4'd4; // SLLI (alu_op_e)
+                    3'd2: alu_ctrl_o = 4'd2; // SLTI
+                    3'd3: alu_ctrl_o = 4'd3; // SLTIU
                     3'd4: alu_ctrl_o = 4'd5; // XORI
                     3'd5: alu_ctrl_o = (funct7_i == 7'd32) ? 4'd7 : 4'd6; // SRAI : SRLI
                     3'd6: alu_ctrl_o = 4'd8; // ORI

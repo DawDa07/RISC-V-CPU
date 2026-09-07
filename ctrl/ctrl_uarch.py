@@ -39,11 +39,11 @@ def module_ctrl(opcode_i, funct3_i, funct7_i, DEBUG_MODE=False):
         if funct3_i == 0:
             alu_ctrl = 1 if funct7_i == 32 else 0   # SUB : ADD
         elif funct3_i == 1:
-            alu_ctrl = 2   # SLL
+            alu_ctrl = 4   # SLL  (alu_op_e)
         elif funct3_i == 2:
-            alu_ctrl = 3   # SLT
+            alu_ctrl = 2   # SLT
         elif funct3_i == 3:
-            alu_ctrl = 4   # SLTU
+            alu_ctrl = 3   # SLTU
         elif funct3_i == 4:
             alu_ctrl = 5   # XOR
         elif funct3_i == 5:
@@ -59,11 +59,11 @@ def module_ctrl(opcode_i, funct3_i, funct7_i, DEBUG_MODE=False):
         if funct3_i == 0:
             alu_ctrl = 0   # ADDI
         elif funct3_i == 1:
-            alu_ctrl = 2   # SLLI
+            alu_ctrl = 4   # SLLI (alu_op_e)
         elif funct3_i == 2:
-            alu_ctrl = 3   # SLTI
+            alu_ctrl = 2   # SLTI
         elif funct3_i == 3:
-            alu_ctrl = 4   # SLTIU
+            alu_ctrl = 3   # SLTIU
         elif funct3_i == 4:
             alu_ctrl = 5   # XORI
         elif funct3_i == 5:

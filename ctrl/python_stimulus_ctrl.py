@@ -13,7 +13,13 @@ async def automated_ctrl_test(dut):
         # --- Standard Instruction Checks ---
         ("R-Type ADD",  51,  0, 0),
         ("R-Type SUB",  51,  0, 32),
+        ("R-Type SLL",  51,  1, 0),
+        ("R-Type SLT",  51,  2, 0),
+        ("R-Type SLTU", 51,  3, 0),
         ("I-Type ADDI", 19,  0, 0),
+        ("I-Type SLLI", 19,  1, 0),
+        ("I-Type SLTI", 19,  2, 0),
+        ("I-Type SLTIU",19,  3, 0),
         ("I-Type SRAI", 19,  5, 32),
         ("LOAD",        3,   2, 0),
         ("STORE",       35,  2, 0),

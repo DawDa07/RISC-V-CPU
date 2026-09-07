@@ -18,7 +18,7 @@ async def automated_instr_mem_wrapper_test(dut):
 
     dut._log.info("Backdoor loading instructions into behavioral memory...")
 
-    mem_array_handle = dut.memory_array
+    mem_array_handle = dut.u_behav_macro.memory_array
 
     min_instr = MIN_VAL
     golden_imem.load_instruction(0x00000000, min_instr)
