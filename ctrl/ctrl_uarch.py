@@ -15,9 +15,9 @@ OP_JAL = 111      # 0x6F
 def module_ctrl(opcode_i, funct3_i, funct7_i, DEBUG_MODE=False):
     """Python model matching ctrl.sv.
 
-    Returns (is_cond_branch_o, is_jal_o, is_jalr_o, imm_src_o,
+    Returns (is_cond_branch_o, is_jal_o, is_jalr_o,
              alu_src1_ctrl_o, alu_src2_ctrl_o, alu_ctrl_o,
-             datamem_re_o, datamem_we_o, dataMem2Reg_o, regfile_we_o).
+             datamem_we_o, dataMem2Reg_o, regfile_we_o).
     """
     op = opcode_i & 0x7F
 
@@ -25,11 +25,9 @@ def module_ctrl(opcode_i, funct3_i, funct7_i, DEBUG_MODE=False):
     is_cond_branch = 0
     is_jal = 0
     is_jalr = 0
-    imm_src = 0
     alu_src1_ctrl = 1   # RS1
     alu_src2_ctrl = 0   # RS2
     alu_ctrl = 0        # ADD
-    datamem_re = 0
     datamem_we = 0
     data_mem2reg = 0    # ALU out
     regfile_we = 0
@@ -76,28 +74,23 @@ def module_ctrl(opcode_i, funct3_i, funct7_i, DEBUG_MODE=False):
     elif op == OP_LOAD:
         regfile_we = 1
         alu_src2_ctrl = 1
-        datamem_re = 1
         data_mem2reg = 1
 
     elif op == OP_STORE:
-        imm_src = 1
         alu_src2_ctrl = 1
         datamem_we = 1
 
     elif op == OP_BRANCH:
         is_cond_branch = 1
-        imm_src = 2
         alu_ctrl = 1   # SUB
 
     elif op == OP_LUI:
         regfile_we = 1
-        imm_src = 3
         alu_src1_ctrl = 2   # Zero
         alu_src2_ctrl = 1
 
     elif op == OP_AUIPC:
         regfile_we = 1
-        imm_src = 3
         alu_src1_ctrl = 0   # PC
         alu_src2_ctrl = 1
 
@@ -112,13 +105,12 @@ def module_ctrl(opcode_i, funct3_i, funct7_i, DEBUG_MODE=False):
     elif op == OP_JAL:
         is_jal = 1
         regfile_we = 1
-        imm_src = 4
         data_mem2reg = 2
 
     result = (
-        is_cond_branch, is_jal, is_jalr, imm_src,
+        is_cond_branch, is_jal, is_jalr,
         alu_src1_ctrl, alu_src2_ctrl, alu_ctrl,
-        datamem_re, datamem_we, data_mem2reg, regfile_we,
+        datamem_we, data_mem2reg, regfile_we,
     )
 
     if DEBUG_MODE:

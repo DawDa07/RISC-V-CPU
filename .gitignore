@@ -12,6 +12,11 @@ results.xml
 *.vcd
 *.fst
 
+# RISC-V program build intermediates (keep the generated *.hex)
+cpu/programs/*.o
+cpu/programs/*.elf
+cpu/programs/*.bin
+
 # OS / editor (local Python paths)
 .vscode/
 pyrightconfig.json

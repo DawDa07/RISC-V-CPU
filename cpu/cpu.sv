@@ -28,11 +28,9 @@ module cpu (
     logic       is_cond_branch;
     logic       is_jal;
     logic       is_jalr;
-    logic [2:0] imm_src_unused;
     logic [1:0] alu_src1_ctrl;
     logic       alu_src2_ctrl;
     logic [3:0] alu_ctrl;
-    logic       datamem_re_unused;
     logic       datamem_we;
     logic [1:0] data_mem2reg;
     logic       regfile_we;
@@ -116,11 +114,9 @@ module cpu (
         .is_cond_branch_o (is_cond_branch),
         .is_jal_o         (is_jal),
         .is_jalr_o        (is_jalr),
-        .imm_src_o        (imm_src_unused),
         .alu_src1_ctrl_o  (alu_src1_ctrl),
         .alu_src2_ctrl_o  (alu_src2_ctrl),
         .alu_ctrl_o       (alu_ctrl),
-        .datamem_re_o     (datamem_re_unused),
         .datamem_we_o     (datamem_we),
         .dataMem2Reg_o    (data_mem2reg),
         .regfile_we_o     (regfile_we)

@@ -55,36 +55,32 @@ async def automated_ctrl_test(dut):
         await Timer(1, unit="ns")
 
         # Get Golden Result tuple from Python Model
-        # Returns: (is_cond_branch_o, is_jal_o, is_jalr_o, imm_src_o,
+        # Returns: (is_cond_branch_o, is_jal_o, is_jalr_o,
         #           alu_src1_ctrl_o, alu_src2_ctrl_o, alu_ctrl_o,
-        #           datamem_re_o, datamem_we_o, dataMem2Reg_o, regfile_we_o)
+        #           datamem_we_o, dataMem2Reg_o, regfile_we_o)
         exp = module_ctrl(op, f3, f7, DEBUG_MODE=False)
 
         # Read Hardware
         hw_is_cond    = int(dut.is_cond_branch_o.value)
         hw_is_jal     = int(dut.is_jal_o.value)
         hw_is_jalr    = int(dut.is_jalr_o.value)
-        hw_imm_src    = int(dut.imm_src_o.value)
         hw_alu_src1   = int(dut.alu_src1_ctrl_o.value)
         hw_alu_src2   = int(dut.alu_src2_ctrl_o.value)
         hw_alu_ctrl   = int(dut.alu_ctrl_o.value)
-        hw_dmem_re    = int(dut.datamem_re_o.value)
         hw_dmem_we    = int(dut.datamem_we_o.value)
         hw_m2reg      = int(dut.dataMem2Reg_o.value)
         hw_rf_we      = int(dut.regfile_we_o.value)
 
         # Assertions
-        assert hw_is_cond  == exp[0],  f"IS_COND Fail on {desc}"
-        assert hw_is_jal   == exp[1],  f"IS_JAL Fail on {desc}"
-        assert hw_is_jalr  == exp[2],  f"IS_JALR Fail on {desc}"
-        assert hw_imm_src  == exp[3],  f"IMM_SRC Fail on {desc}"
-        assert hw_alu_src1 == exp[4],  f"ALU_SRC1 Fail on {desc}"
-        assert hw_alu_src2 == exp[5],  f"ALU_SRC2 Fail on {desc}"
-        assert hw_alu_ctrl == exp[6],  f"ALU_CTRL Fail on {desc}"
-        assert hw_dmem_re  == exp[7],  f"DMEM_RE Fail on {desc}"
-        assert hw_dmem_we  == exp[8],  f"DMEM_WE Fail on {desc}"
-        assert hw_m2reg    == exp[9],  f"M2REG Fail on {desc}"
-        assert hw_rf_we    == exp[10], f"RF_WE Fail on {desc}"
+        assert hw_is_cond  == exp[0], f"IS_COND Fail on {desc}"
+        assert hw_is_jal   == exp[1], f"IS_JAL Fail on {desc}"
+        assert hw_is_jalr  == exp[2], f"IS_JALR Fail on {desc}"
+        assert hw_alu_src1 == exp[3], f"ALU_SRC1 Fail on {desc}"
+        assert hw_alu_src2 == exp[4], f"ALU_SRC2 Fail on {desc}"
+        assert hw_alu_ctrl == exp[5], f"ALU_CTRL Fail on {desc}"
+        assert hw_dmem_we  == exp[6], f"DMEM_WE Fail on {desc}"
+        assert hw_m2reg    == exp[7], f"M2REG Fail on {desc}"
+        assert hw_rf_we    == exp[8], f"RF_WE Fail on {desc}"
 
         dut._log.info(f"PASS: {desc} mapped securely.")
 
