@@ -8,11 +8,9 @@ module ctrl (
     output logic       is_cond_branch_o,
     output logic       is_jal_o,
     output logic       is_jalr_o,
-    output logic [2:0] imm_src_o,
     output logic [1:0] alu_src1_ctrl_o, // 0=PC, 1=RS1, 2=Zero
     output logic       alu_src2_ctrl_o, // 0=RS2, 1=Imm
     output logic [3:0] alu_ctrl_o,      // 0=ADD, 1=SUB, etc.
-    output logic       datamem_re_o,
     output logic       datamem_we_o,
     output logic [1:0] dataMem2Reg_o,   // 0=ALU, 1=DataMem, 2=PC+4
     output logic       regfile_we_o
@@ -26,11 +24,9 @@ module ctrl (
         is_cond_branch_o = 1'b0;
         is_jal_o         = 1'b0;
         is_jalr_o        = 1'b0;
-        imm_src_o        = 3'd0;    // Default: 0 (I-Type)
         alu_src1_ctrl_o  = 2'd1;    // Default: 1 (RS1)
         alu_src2_ctrl_o  = 1'b0;    // Default: 0 (RS2)
         alu_ctrl_o       = 4'd0;    // Default: 0 (ADD)
-        datamem_re_o     = 1'b0;
         datamem_we_o     = 1'b0;
         dataMem2Reg_o    = 2'd0;    // Default: 0 (ALU Out)
         regfile_we_o     = 1'b0;
@@ -68,17 +64,15 @@ module ctrl (
                 endcase
             end
 
-            // LOAD (0x03)
+            // LOAD (0x03) - data memory read is asynchronous, no enable needed
             7'd3: begin
                 regfile_we_o    = 1'b1;
                 alu_src2_ctrl_o = 1'b1;
-                datamem_re_o    = 1'b1;
                 dataMem2Reg_o   = 2'd1;
             end
 
             // STORE (0x23)
             7'd35: begin
-                imm_src_o       = 3'd1;
                 alu_src2_ctrl_o = 1'b1;
                 datamem_we_o    = 1'b1;
             end
@@ -86,14 +80,12 @@ module ctrl (
             // BRANCH (0x63)
             7'd99: begin
                 is_cond_branch_o = 1'b1;
-                imm_src_o        = 3'd2;
                 alu_ctrl_o       = 4'd1; // SUB
             end
 
             // LUI (0x37)
             7'd55: begin
                 regfile_we_o    = 1'b1;
-                imm_src_o       = 3'd3;
                 alu_src1_ctrl_o = 2'd2; // Zero
                 alu_src2_ctrl_o = 1'b1;
             end
@@ -101,7 +93,6 @@ module ctrl (
             // AUIPC (0x17)
             7'd23: begin
                 regfile_we_o    = 1'b1;
-                imm_src_o       = 3'd3;
                 alu_src1_ctrl_o = 2'd0; // PC
                 alu_src2_ctrl_o = 1'b1;
             end
@@ -120,7 +111,6 @@ module ctrl (
             7'd111: begin
                 is_jal_o        = 1'b1;
                 regfile_we_o    = 1'b1;
-                imm_src_o       = 3'd4;
                 dataMem2Reg_o   = 2'd2;
             end
 

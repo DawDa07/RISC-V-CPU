@@ -12,7 +12,7 @@ Combinational decoder that turns opcode / funct3 / funct7 into datapath control 
 |--------|-----|--------------|
 | R-type | `0x33` | `regfile_we`, ALU op from `funct3`/`funct7` |
 | I-ALU | `0x13` | `regfile_we`, `alu_src2=Imm`, ALU op from `funct3`/`funct7` |
-| Load | `0x03` | `regfile_we`, `alu_src2=Imm`, `datamem_re`, `wb=LAU` |
+| Load | `0x03` | `regfile_we`, `alu_src2=Imm`, `wb=LAU` |
 | Store | `0x23` | `alu_src2=Imm`, `datamem_we` |
 | Branch | `0x63` | `is_cond_branch`, `alu_ctrl=SUB` |
 | LUI | `0x37` | `regfile_we`, `alu_src1=Zero`, `alu_src2=Imm` |
@@ -28,3 +28,5 @@ Combinational decoder that turns opcode / funct3 / funct7 into datapath control 
 | `alu_src2_ctrl_o` | `0=RS2`, `1=Imm` |
 | `dataMem2Reg_o` | `0=ALU`, `1=DataMem/LAU`, `2=PC+4` |
 | `alu_ctrl_o` | same as `alu_op_e` (`ADD`…`AND`) |
+
+Immediates are produced by `decoder` directly from the opcode, and data memory reads are asynchronous, so `ctrl` has no `imm_src` or `datamem_re` outputs.

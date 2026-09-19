@@ -8,9 +8,19 @@ module instr_mem_behavioral #(
     // The physical memory array (Word addressed)
     logic [31:0] memory_array [0:DEPTH-1];
 
-    // Initialize memory with hex firmware at time zero
+    // Zero-fill, then optionally preload firmware.hex when present.
+    // CPU cocotb tests backdoor-load programs/*.hex and do not rely on this.
+    integer i;
+    integer fd;
     initial begin
-        $readmemh("firmware.hex", memory_array);
+        for (i = 0; i < DEPTH; i = i + 1) begin
+            memory_array[i] = 32'h00000000;
+        end
+        fd = $fopen("firmware.hex", "r");
+        if (fd) begin
+            $fclose(fd);
+            $readmemh("firmware.hex", memory_array);
+        end
     end
 
     // =========================================================================

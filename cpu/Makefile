@@ -31,3 +31,23 @@ export COCOTB_HDL_TIMEUNIT = 1ns
 export COCOTB_HDL_TIMEPRECISION = 1ps
 
 include $(shell cocotb-config --makefiles)/Makefile.sim
+
+# -----------------------------------------------------------------------------
+# Test programs: rebuild programs/*.hex from programs/*.S when the RISC-V
+# binutils are available; otherwise fall back to the committed .hex files.
+# -----------------------------------------------------------------------------
+RISCV_AS := $(shell command -v riscv64-elf-as 2>/dev/null)
+
+.PHONY: programs
+programs:
+ifneq ($(RISCV_AS),)
+	@$(MAKE) --no-print-directory -C programs
+else
+	@if ls programs/*.hex >/dev/null 2>&1; then \
+	    echo "riscv64-elf-binutils not found; using committed programs/*.hex"; \
+	else \
+	    echo "ERROR: no RISC-V toolchain and no prebuilt programs/*.hex"; exit 1; \
+	fi
+endif
+
+sim: programs
