@@ -97,15 +97,3 @@ Programs are plain GNU assembly (`cpu/programs/*.S`) linked at address `0x0` by 
     ├── python_stimulus_cpu.py
     └── programs/           *.S sources, link.ld, bin2hex.py, generated *.hex
 ```
-
-## Scope
-
-RV32I base integer ISA, single cycle. No CSRs, `fence`, `ecall`/`ebreak`, M extension, or pipelining.
-
-## Remote
-
-The GitHub repository moved to `DawDa07/RISC-V-CPU`. If your clone still points at `risc-v-core`:
-
-```sh
-git remote set-url origin https://github.com/DawDa07/RISC-V-CPU.git
-```
